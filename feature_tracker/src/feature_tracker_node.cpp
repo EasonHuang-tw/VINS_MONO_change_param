@@ -74,9 +74,27 @@ void img_callback(const sensor_msgs::ImageConstPtr &img_msg)
         img.encoding = "mono8";
         ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::MONO8);
     }
-    else
-        ptr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::MONO8);
 
+    else if (img_msg->encoding == "8UC3")
+    {
+	ROS_INFO("im here");
+        sensor_msgs::Image img;
+        img.header = img_msg->header;
+        img.height = img_msg->height;
+        img.width = img_msg->width;
+        img.is_bigendian = img_msg->is_bigendian;
+        img.step = img_msg->step;
+        img.data = img_msg->data;
+        ROS_INFO("im here baby");
+        ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::BGR8);
+        ROS_INFO("im here again and again");
+    }
+
+    else{
+	ROS_INFO("im here");
+        ptr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::MONO8);
+	ROS_INFO("happy");
+}
     cv::Mat show_img = ptr->image;
     TicToc t_r;
     for (int i = 0; i < NUM_OF_CAM; i++)
@@ -209,7 +227,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n("~");
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
     readParameters(n);
-
+	ROS_INFO("hehehehehoiheiogiongbioernoi  eadson");
     for (int i = 0; i < NUM_OF_CAM; i++)
         trackerData[i].readIntrinsicParameter(CAM_NAMES[i]);
 
